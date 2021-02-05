@@ -2,7 +2,7 @@
   "name": "employee-tracker",
   "version": "1.0.0",
   "description": "<h1 align=\"center\"> Employee Tracker </h1>",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
