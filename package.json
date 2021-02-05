@@ -1,0 +1,26 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\"> Employee Tracker </h1>",
+  "main": "index.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewdamron/employee-tracker.git"
+  },
+  "keywords": [],
+  "author": "Matt Damron",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matthewdamron/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/matthewdamron/employee-tracker#readme"
+}
