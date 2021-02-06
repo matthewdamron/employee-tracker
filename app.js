@@ -1,9 +1,11 @@
 const inquirer = require('inquirer');
-const mysql2 = require('mysql2');
+const mysql = require('mysql2');
 const consoleTable = require('console.table');
 
+const { viewAllEmployees } = require('./utils/view');
+
 // Create mysql connection
-const connection = mysql2.createConnection ({
+const connection = mysql.createConnection ({
     host: 'localhost',
     port: 3306,
     user: 'employee-tracker',
@@ -51,7 +53,10 @@ function startApp() {
                 ]).then(function(res) {
                     switch (res.choice) {
                         case 'View All Employees':
-                            viewAllEmplpyees();
+                            viewAllEmployees(connection);
+                            const test = viewAllEmployees(connection);
+                            console.log(test);
+                            startApp();
                             break;
                         
                         case `View Employee's By Deparments`:
@@ -175,3 +180,27 @@ function startApp() {
         }
     })
 };
+
+// const viewAllEmployees = (connection) => {
+//     connection.query(
+//         `SELECT
+//             employees.id AS 'ID',
+//             employees.first_name AS 'First Name',
+//             employees.last_name AS 'Last Name',
+//             roles.title AS 'Title',
+//             roles.salary AS 'Salary',
+//             departments.department_name AS 'Department',
+//             CONCAT(e.first_name, ' ', e.last_name) AS 'Manager'
+//         FROM employees
+//         INNER JOIN roles ON roles.id = employees.role_id
+//         INNER JOIN departments ON departments.id = roles.department_id
+//         LEFT JOIN employees e ON employees.manager_id = e.id;`,
+//         function (err, res) {
+//             if (err) throw err
+//             console.log('\n');
+//             console.table(res);
+//             startApp();
+//             // return true;
+//         }
+//     )
+// };
