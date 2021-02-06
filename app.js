@@ -1,7 +1,6 @@
-const inguirer = require('inquirer');
+const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
 const consoleTable = require('console.table');
-const inquirer = require('inquirer');
 
 // Create mysql connection
 const connection = mysql2.createConnection ({
@@ -29,7 +28,8 @@ function startApp() {
                 'View',
                 'Add',
                 'Update',
-                'Remove'
+                'Remove',
+                'Exit App'
             ]
         }
     ]).then(function(res) {
@@ -42,9 +42,9 @@ function startApp() {
                         name: 'choice',
                         choices: [
                             'View All Employees',
-                            `View Employee's By Deparment`,
-                            `View Employee's By Manager`,
-                            `View Employee's By Role`,
+                            `View Employee's By Deparments`,
+                            `View Employee's By Managers`,
+                            `View Employee's By Roles`,
                             'Go Back'
                         ]
                     }
@@ -53,8 +53,21 @@ function startApp() {
                         case 'View All Employees':
                             viewAllEmplpyees();
                             break;
+                        
+                        case `View Employee's By Deparments`:
+                            viewByDeparments();
+                            break;
+
+                        case `View Employee's By Managers`:
+                            viewByManagers();
+                            break;
+                        
+                        case `View Employee's By Roles`:
+                            viewByRoles();
+                            break;
                     
-                        default:
+                        case 'Go Back':
+                            startApp();
                             break;
                     }
                 })                
@@ -75,11 +88,20 @@ function startApp() {
                     }
                 ]).then(function(res) {
                     switch (res.choice) {
-                        case value:
-                            
+                        case 'Add Employee':
+                            addEmployee();
+                            break;
+
+                        case 'Add Department':
+                            addDepartment();
+                            break;
+
+                        case 'Add Role':
+                            addRole();
                             break;
                     
-                        default:
+                        case 'Go Back':
+                            startApp();
                             break;
                     }
                 })
@@ -99,11 +121,16 @@ function startApp() {
                     }
                 ]).then(function(res) {
                     switch (res.choice) {
-                        case value:
-                            
+                        case 'Update Employee Role':
+                            updateRole();
+                            break;
+
+                        case 'Update Employee Manager':
+                            updateManager();
                             break;
                     
-                        default:
+                        case 'Go Back':
+                            startApp();
                             break;
                     }
                 })
@@ -124,17 +151,26 @@ function startApp() {
                     }
                 ]).then(function(res) {
                     switch (res.choice) {
-                        case value:
-                            
+                        case 'Remove Employee':
+                            removeEmployee();
+                            break;
+
+                        case 'Remove Department':
+                            removeDepartment();
+                            break;
+
+                        case 'Remove Role':
+                            removeRole();
                             break;
                     
-                        default:
+                        case 'Go Back':
+                            startApp();
                             break;
                     }
                 })
                 break;
-        
-            default:
+            case 'Exit App':
+                connection.end();
                 break;
         }
     })
