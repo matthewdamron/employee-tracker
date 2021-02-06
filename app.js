@@ -2,7 +2,13 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const consoleTable = require('console.table');
 
-const { viewAllEmployees } = require('./utils/view');
+const {
+    viewAllEmployees,
+    viewByDeparments,
+    viewByManagers,
+    viewByRoles,
+    viewAllDeparments,
+    viewAllRoles } = require('./utils/view');
 
 // Create mysql connection
 const connection = mysql.createConnection ({
@@ -36,6 +42,8 @@ function startApp() {
         }
     ]).then(function(res) {
         switch (res.choice) {
+
+            // ---- VIEW ----
             case 'View':
                 inquirer.prompt ([
                     {
@@ -44,32 +52,68 @@ function startApp() {
                         name: 'choice',
                         choices: [
                             'View All Employees',
-                            `View Employee's By Deparments`,
-                            `View Employee's By Managers`,
-                            `View Employee's By Roles`,
+                            `View All Employee's By Deparments`,
+                            `View All Employee's By Managers`,
+                            `View All Employee's By Roles`,
+                            'View All Deparments',
+                            'View All Roles',
                             'Go Back'
                         ]
                     }
                 ]).then(function(res) {
                     switch (res.choice) {
                          case 'View All Employees':
-                            let promise = viewAllEmployees(connection);
-                            promise.then(([rows]) => {
-                                console.table(rows);
-                                startApp();
-                            });
+                            viewAllEmployeesPromise = viewAllEmployees(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                                });
                             break;
                         
-                        case `View Employee's By Deparments`:
-                            viewByDeparments();
+                        case `View All Employee's By Deparments`:
+                            viewByDepartmentPromise = viewByDeparments(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                                });
                             break;
 
-                        case `View Employee's By Managers`:
-                            viewByManagers();
+                        case `View All Employee's By Managers`:
+                            viewByManagerPromis = viewByManagers(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                                });
                             break;
                         
-                        case `View Employee's By Roles`:
-                            viewByRoles();
+                        case `View All Employee's By Roles`:
+                            viewByRolePromise = viewByRoles(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                            });
+                            break;
+
+                        case `View All Deparments`:
+                            viewAllDeparmentsPromise = viewAllDeparments(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                            });
+                            break;
+
+                        case `View All Roles`:
+                            viewAllRolesPromise = viewAllRoles(connection)
+                                .then(([rows]) => {
+                                    console.log('\n');
+                                    console.table(rows);
+                                    startApp();
+                            });
                             break;
                     
                         case 'Go Back':
@@ -79,6 +123,7 @@ function startApp() {
                 })                
                 break;
 
+            // ---- ADD ----
             case 'Add':
                 inquirer.prompt ([
                     {
@@ -113,6 +158,7 @@ function startApp() {
                 })
                 break;
             
+            // ---- UPDATE ----
             case 'Update':
                 inquirer.prompt ([
                     {
@@ -142,6 +188,7 @@ function startApp() {
                 })
                 break;
 
+            // ---- REMOVE ----
             case 'Remove':
                 inquirer.prompt ([
                     {
@@ -175,6 +222,8 @@ function startApp() {
                     }
                 })
                 break;
+
+            // ---- EXIT APP ----
             case 'Exit App':
                 connection.end();
                 break;
