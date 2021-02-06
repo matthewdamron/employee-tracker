@@ -2,13 +2,27 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const consoleTable = require('console.table');
 
+// Global values
+const roleArray = [];
+const managersArray = [];
+const departmentArray = [];
+
+// Requirements for viewing
 const {
     viewAllEmployees,
     viewByDeparments,
     viewByManagers,
     viewByRoles,
     viewAllDeparments,
-    viewAllRoles } = require('./utils/view');
+    viewAllRoles } = require('./utils/view')
+;
+
+// Requirements for adding
+// const {
+//     addEmployee,
+//     addDepartment,
+//     addRole } = require('./utils/add')
+// ;
 
 // Create mysql connection
 const connection = mysql.createConnection ({
@@ -63,7 +77,7 @@ function startApp() {
                 ]).then(function(res) {
                     switch (res.choice) {
                          case 'View All Employees':
-                            viewAllEmployeesPromise = viewAllEmployees(connection)
+                            viewAllEmployees(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -72,7 +86,7 @@ function startApp() {
                             break;
                         
                         case `View All Employee's By Deparments`:
-                            viewByDepartmentPromise = viewByDeparments(connection)
+                            viewByDeparments(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -81,7 +95,7 @@ function startApp() {
                             break;
 
                         case `View All Employee's By Managers`:
-                            viewByManagerPromis = viewByManagers(connection)
+                            viewByManagers(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -90,7 +104,7 @@ function startApp() {
                             break;
                         
                         case `View All Employee's By Roles`:
-                            viewByRolePromise = viewByRoles(connection)
+                            viewByRoles(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -99,7 +113,7 @@ function startApp() {
                             break;
 
                         case `View All Deparments`:
-                            viewAllDeparmentsPromise = viewAllDeparments(connection)
+                            viewAllDeparments(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -108,7 +122,7 @@ function startApp() {
                             break;
 
                         case `View All Roles`:
-                            viewAllRolesPromise = viewAllRoles(connection)
+                            viewAllRoles(connection)
                                 .then(([rows]) => {
                                     console.log('\n');
                                     console.table(rows);
@@ -230,3 +244,136 @@ function startApp() {
         }
     })
 };
+
+// Pull all current Role positions
+function selectRole() {
+    connection.query('SELECT * FROM roles', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            roleArray.push(res[i].title);
+        }
+    });
+    return roleArray;
+};
+
+// Pull all current Manager positions
+function selectManager() {
+    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            managersArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+    });
+    return managersArray;
+};
+
+// Pull all current Manager positions
+function selectDepartment() {
+    connection.query('SELECT * FROM departments', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            departmentArray.push(res[i].department_name);
+        }
+    });
+    return departmentArray;
+};
+
+// Add Employee Function
+function addEmployee() {
+    inquirer.prompt([
+        {
+            name: 'firstname',
+            type: 'input',
+            message: 'Enter their first name:'
+        },
+        {
+            name: 'lastname',
+            type: 'input',
+            message: 'Enter their last name:'
+        },
+        {
+            name: 'role',
+            type: 'list',
+            message: 'What is their role?',
+            choices: selectRole()
+        },
+        {
+            name: 'manager',
+            type: 'list',
+            message: 'Whats their managers name?',
+            choices: selectManager()
+        }
+    ]).then(function (res) {
+        let roleId = selectRole().indexOf(res.role) + 1;
+        let managerId = selectManager().indexOf(res.manager) + 1;
+        connection.query('INSERT INTO employees SET ?',
+        {
+            first_name: res.firstname,
+            last_name: res.lastname,
+            manager_id: managerId,
+            role_id: roleId
+        }, 
+        function(err){
+            if (err) throw err;
+            console.log('\n Your Employee has been successfully added!\n');
+            startApp();
+        });
+    });
+};
+
+// Add Department Function
+function addDepartment() { 
+    inquirer.prompt([
+        {
+            name: 'name',
+            type: 'input',
+            message: 'What Department would you like to add?'
+        }
+    ]).then(function(res) {
+        connection.query('INSERT INTO departments SET ? ',
+        {
+            department_name: res.name
+        },
+        function(err) {
+            if (err) throw err
+            console.table(res);
+            startApp();
+        });
+    });
+};
+
+// Add Role Function
+function addRole() { 
+    inquirer.prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'What Role would you like to add?'
+        },
+        {
+            name: 'salary',
+            type: 'input',
+            message: 'What is the Salary for this role?'
+        },
+        {
+            name: 'department',
+            type: 'list',
+            message: 'Whats Department is this Role for?',
+            choices: selectDepartment()
+        }
+    ]).then(function(res) {
+        let roleId = selectDepartment().indexOf(res.department) + 1;
+        connection.query('INSERT INTO roles SET ? ',
+        {
+            title: res.title,
+            salary: res.salary,
+            department_id: roleId
+        },
+        function(err) {
+            if (err) throw err
+            console.table(res);
+            startApp();
+        });
+    });
+};
+
