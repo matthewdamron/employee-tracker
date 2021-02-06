@@ -45,7 +45,32 @@ function startApp() {
                             `View Employee's By Deparment`,
                             `View Employee's By Manager`,
                             `View Employee's By Role`,
-                            'Back'
+                            'Go Back'
+                        ]
+                    }
+                ]).then(function(res) {
+                    switch (res.choice) {
+                        case 'View All Employees':
+                            viewAllEmplpyees();
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                })                
+                break;
+
+            case 'Add':
+                inquirer.prompt ([
+                    {
+                        type: 'list',
+                        message: 'What would you like to add?',
+                        name: 'choice',
+                        choices: [
+                            'Add Employee',
+                            'Add Department',
+                            'Add Role',
+                            'Go Back'
                         ]
                     }
                 ]).then(function(res) {
@@ -58,7 +83,55 @@ function startApp() {
                             break;
                     }
                 })
-                
+                break;
+            
+            case 'Update':
+                inquirer.prompt ([
+                    {
+                        type: 'list',
+                        message: 'What would you like to update?',
+                        name: 'choice',
+                        choices: [
+                            'Update Employee Role',
+                            'Update Employee Manager',
+                            'Go Back'
+                        ]
+                    }
+                ]).then(function(res) {
+                    switch (res.choice) {
+                        case value:
+                            
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                })
+                break;
+
+            case 'Remove':
+                inquirer.prompt ([
+                    {
+                        type: 'list',
+                        message: 'What would you like to remove?',
+                        name: 'choice',
+                        choices: [
+                            'Remove Employee',
+                            'Remove Department',
+                            'Remove Role',
+                            'Go Back'
+                        ]
+                    }
+                ]).then(function(res) {
+                    switch (res.choice) {
+                        case value:
+                            
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                })
                 break;
         
             default:
