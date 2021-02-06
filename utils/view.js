@@ -13,26 +13,8 @@ const viewAllEmployees = (connection) => {
         INNER JOIN departments ON departments.id = roles.department_id
         LEFT JOIN employees e ON employees.manager_id = e.id;`;
 
-    let value = connection.promise().query(sql)
-    .then( ([rows,fields]) => {
-        // let test = rows;
-        return rows;
-        console.table(rows);
-      });
-        return (value);
-    // });
-    // value.then(function(results) {
-    //     return results;
-    // })
-    // return value;
+    let promise = connection.promise().query(sql);
+    return (promise);
 };
 
 module.exports = { viewAllEmployees };
-
-
-// con.promise().query("SELECT 1")
-//   .then( ([rows,fields]) => {
-//     console.log(rows);
-//   })
-//   .catch(console.log)
-//   .then( () => con.end());
