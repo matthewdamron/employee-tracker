@@ -4,6 +4,9 @@ const consoleTable = require('console.table');
 
 const { viewAllEmployees } = require('./utils/view');
 
+// const ViewClass = require('./utils/viewClass');
+// const viewclass = new ViewClass();
+
 // Create mysql connection
 const connection = mysql.createConnection ({
     host: 'localhost',
@@ -43,6 +46,7 @@ function startApp() {
                         message: 'How would you like to view the employees?',
                         name: 'choice',
                         choices: [
+                            'view test',
                             'View All Employees',
                             `View Employee's By Deparments`,
                             `View Employee's By Managers`,
@@ -52,11 +56,19 @@ function startApp() {
                     }
                 ]).then(function(res) {
                     switch (res.choice) {
+                        case 'view test':
+                            viewclass.initializeViews(connection);
+                            break;
+
                         case 'View All Employees':
-                            viewAllEmployees(connection);
+                            // viewAllEmployees(connection);
                             const test = viewAllEmployees(connection);
-                            console.log(test);
-                            startApp();
+                            test.then(function(results) {
+                                console.table(results);
+                                startApp();
+                                })
+                            // console.log(test);
+                            // startApp();
                             break;
                         
                         case `View Employee's By Deparments`:
@@ -180,6 +192,8 @@ function startApp() {
         }
     })
 };
+
+// const viewclass = new ViewClass();
 
 // const viewAllEmployees = (connection) => {
 //     connection.query(

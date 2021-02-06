@@ -19,9 +19,12 @@ const viewAllEmployees = (connection) => {
         return rows;
         console.table(rows);
       });
-        // return json(res);
+        return (value);
     // });
-    return value;
+    // value.then(function(results) {
+    //     return results;
+    // })
+    // return value;
 };
 
 module.exports = { viewAllEmployees };
