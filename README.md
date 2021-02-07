@@ -47,15 +47,16 @@ THEN I am prompted to select an employee to update and their new role and this i
 ```
 
 ## Screencast
-<!-- [![Watch the video](./images/note-taker.png)](https://drive.google.com/file/d/1p1HJg4mqLkZWnnwWoGskG6ujtpeNQXxF/view?usp=sharing) -->
+[![Watch the video](./images/employee-tracker.png)](https://drive.google.com/file/d/12EFXnycS3AHPvkPC710YXGKQar-fu4Ny/view?usp=sharing)
 
 ## Installation
 [node.js](https://nodejs.org)<br />
+[mysql](https://www.mysql.com/)<br />
 `npm install`
 
 ## Usage
-After you install Node.js on your computer browse to the application location in your terminal.<br />
-Run the command 'node app' and folow the propmts to manage your compnay employess.
+After you install Node.js and MySQLon your computer browse to the application location in your terminal.<br />
+Run the command 'node app.js' and folow the propmts to manage your compnay employess.
 
 ## License
 ![GitHub](https://img.shields.io/github/license/matthewdamron/employee-tracker)<br />
