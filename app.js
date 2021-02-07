@@ -41,50 +41,6 @@ connection.connect(function(err) {
     startApp();
 });
 
-// Pull all current Role positions
-function selectRole() {
-    connection.query('SELECT * FROM roles', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            roleArray.push(res[i].title);
-        }
-    });
-    return roleArray;
-};
-
-// Pull all current Manager positions
-function selectManager() {
-    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            managersArray.push(res[i].first_name + ' ' + res[i].last_name);
-        }
-    });
-    return managersArray;
-};
-
-// Pull all Departments positions
-function selectDepartment() {
-    connection.query('SELECT * FROM departments', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            departmentArray.push(res[i].department_name);
-        }
-    });
-    return departmentArray;
-};
-
-// Pull all Employees
-function selectEmployee() {
-    connection.query('SELECT * FROM employees', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            employeeArray.push(res[i].first_name + ' ' + res[i].last_name);
-        }
-    });
-    return employeeArray;
-};
-
 function startApp() {
     inquirer.prompt ([
         {
@@ -327,7 +283,8 @@ function addEmployee() {
         }, 
         function(err){
             if (err) throw err;
-            console.log('\n Your Employee has been successfully added!\n');
+            console.log('\n');
+            console.table(res);
             startApp();
         });
     });
@@ -348,6 +305,7 @@ function addDepartment() {
         },
         function(err) {
             if (err) throw err
+            console.log('\n');
             console.table(res);
             startApp();
         });
@@ -383,6 +341,7 @@ function addRole() {
         },
         function(err) {
             if (err) throw err
+            console.log('\n');
             console.table(res);
             startApp();
         });
@@ -409,17 +368,62 @@ function updateRole() {
                 choices: selectRole()
             }
         ]).then(function(response) {
-            // console.log(response)
             let employeeId = employeeArray.indexOf(response.name) + 1;
-            // console.log(employeeId);
             let roleId = selectRole().indexOf(response.role) + 1;
-            connection.query(`UPDATE employees SET role_id = ${roleId} WHERE id = ${employeeId}`, 
+            connection.query(
+                `UPDATE employees
+                SET role_id = ${roleId}
+                WHERE id = ${employeeId}`, 
             function(err){
                 if (err) throw err;
+                console.log('\n');
                 console.table(response);
                 startApp();
             });
         });
     });
-    // return employeeArray;
+};
+
+// Pull all current Role positions
+function selectRole() {
+    connection.query('SELECT * FROM roles', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            roleArray.push(res[i].title);
+        }
+    });
+    return roleArray;
+};
+
+// Pull all current Manager positions
+function selectManager() {
+    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            managersArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+    });
+    return managersArray;
+};
+
+// Pull all Departments positions
+function selectDepartment() {
+    connection.query('SELECT * FROM departments', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            departmentArray.push(res[i].department_name);
+        }
+    });
+    return departmentArray;
+};
+
+// Pull all Employees
+function selectEmployee() {
+    connection.query('SELECT * FROM employees', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            employeeArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+    });
+    return employeeArray;
 };
