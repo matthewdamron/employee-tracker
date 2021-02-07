@@ -5,6 +5,7 @@ const consoleTable = require('console.table');
 // Global values
 const roleArray = [];
 const managersArray = [];
+const employeeArray = [];
 const departmentArray = [];
 
 // Requirements for viewing
@@ -39,6 +40,50 @@ connection.connect(function(err) {
     console.log('Connected as id ' + connection.threadId + '\n');
     startApp();
 });
+
+// Pull all current Role positions
+function selectRole() {
+    connection.query('SELECT * FROM roles', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            roleArray.push(res[i].title);
+        }
+    });
+    return roleArray;
+};
+
+// Pull all current Manager positions
+function selectManager() {
+    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            managersArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+    });
+    return managersArray;
+};
+
+// Pull all Departments positions
+function selectDepartment() {
+    connection.query('SELECT * FROM departments', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            departmentArray.push(res[i].department_name);
+        }
+    });
+    return departmentArray;
+};
+
+// Pull all Employees
+function selectEmployee() {
+    connection.query('SELECT * FROM employees', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            employeeArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+    });
+    return employeeArray;
+};
 
 function startApp() {
     inquirer.prompt ([
@@ -245,39 +290,6 @@ function startApp() {
     })
 };
 
-// Pull all current Role positions
-function selectRole() {
-    connection.query('SELECT * FROM roles', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            roleArray.push(res[i].title);
-        }
-    });
-    return roleArray;
-};
-
-// Pull all current Manager positions
-function selectManager() {
-    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            managersArray.push(res[i].first_name + ' ' + res[i].last_name);
-        }
-    });
-    return managersArray;
-};
-
-// Pull all current Manager positions
-function selectDepartment() {
-    connection.query('SELECT * FROM departments', function(err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            departmentArray.push(res[i].department_name);
-        }
-    });
-    return departmentArray;
-};
-
 // Add Employee Function
 function addEmployee() {
     inquirer.prompt([
@@ -377,3 +389,37 @@ function addRole() {
     });
 };
 
+function updateRole() {
+    connection.query('SELECT * FROM employees', function(err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            employeeArray.push(res[i].first_name + ' ' + res[i].last_name);
+        }
+        inquirer.prompt([
+            {
+                name: 'name',
+                type: 'list',
+                message: 'Which Employee would you like to change?',
+                choices: employeeArray
+            },
+            {
+                name: "role",
+                type: "list",
+                message: "What is the Employees new title?",
+                choices: selectRole()
+            }
+        ]).then(function(response) {
+            // console.log(response)
+            let employeeId = employeeArray.indexOf(response.name) + 1;
+            // console.log(employeeId);
+            let roleId = selectRole().indexOf(response.role) + 1;
+            connection.query(`UPDATE employees SET role_id = ${roleId} WHERE id = ${employeeId}`, 
+            function(err){
+                if (err) throw err;
+                console.table(response);
+                startApp();
+            });
+        });
+    });
+    // return employeeArray;
+};
