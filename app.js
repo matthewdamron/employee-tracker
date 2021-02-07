@@ -397,7 +397,8 @@ function selectRole() {
 
 // Pull all current Manager positions
 function selectManager() {
-    connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
+    // connection.query('SELECT first_name, last_name FROM employees WHERE manager_id IS NULL', function(err, res) {
+    connection.query('SELECT first_name, last_name FROM employees', function(err, res) {
         if (err) throw err
         for (var i = 0; i < res.length; i++) {
             managersArray.push(res[i].first_name + ' ' + res[i].last_name);
