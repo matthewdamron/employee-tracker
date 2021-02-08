@@ -193,7 +193,9 @@ function startApp() {
                             break;
 
                         case 'Update Employee Manager':
-                            updateManager();
+                            // updateManager();
+                            console.log('\nThis is a Future Update!');
+                            startApp();
                             break;
                     
                         case 'Go Back':
@@ -220,15 +222,21 @@ function startApp() {
                 ]).then(function(res) {
                     switch (res.choice) {
                         case 'Remove Employee':
-                            removeEmployee();
+                            // removeEmployee();
+                            console.log('\nThis is a Future Update!');
+                            startApp();
                             break;
 
                         case 'Remove Department':
-                            removeDepartment();
+                            // removeDepartment();
+                            console.log('\nThis is a Future Update!');
+                            startApp();
                             break;
 
                         case 'Remove Role':
-                            removeRole();
+                            // removeRole();
+                            console.log('\nThis is a Future Update!');
+                            startApp();
                             break;
                     
                         case 'Go Back':
